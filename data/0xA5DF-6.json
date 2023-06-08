@@ -1,0 +1,8 @@
+{
+  "contest": 248,
+  "handle": "0xA5DF",
+  "risk": "3",
+  "title": "Custom redemption can be used to get more than RToken value, when an upwards depeg occurs",
+  "issueId": 6,
+  "issueUrl": "https://github.com/code-423n4/2023-05-reserve-findings/issues/6"
+}
