@@ -1,0 +1,8 @@
+{
+  "contest": 248,
+  "handle": "0xA5DF",
+  "risk": "2",
+  "title": "Attacker can disable basket during un-registration, which can cause an unnecessary trade in some cases",
+  "issueId": 7,
+  "issueUrl": "https://github.com/code-423n4/2023-05-reserve-findings/issues/7"
+}
