@@ -1,0 +1,8 @@
+{
+  "contest": 248,
+  "handle": "0xA5DF",
+  "risk": "2",
+  "title": "An oracle deprecation might lead the protocol to sell assets for a low price",
+  "issueId": 8,
+  "issueUrl": "https://github.com/code-423n4/2023-05-reserve-findings/issues/8"
+}
