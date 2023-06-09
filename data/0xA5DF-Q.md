@@ -44,4 +44,12 @@ This seems a bit too low since the price is time-dependant that means there woul
 ## If a token that yields RSR would be used as collateral then 100% of the yield would go to StRSR
 This isn’t very likely to happen (currently the only token that yields RSR is StRSR of another RToken) but it’s worth keeping an eye on it.
 
+## Protocol might not be able to compromise basket when needed
+Consider the following scenario:
+* Protocol suffers from some loss and compromises the basket to a 1.1e9 ratio
+* Months pass by and users mint new tokens and increase the TVL
+* A small compromise is required (12%), this brings the ratio to below 1e9 and reverts the compromise
+* Protocol is now disabled despite holding a significant amount of value, and users can only redeem for their prorata share of the assets,
+
+This might be intended design, but worth taking this scenario into account
 
