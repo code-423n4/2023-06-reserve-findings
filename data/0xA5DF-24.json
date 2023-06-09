@@ -1,0 +1,8 @@
+{
+  "contest": 248,
+  "handle": "0xA5DF",
+  "risk": "2",
+  "title": "Users who stake at the end of a freeze would get rewards as if they've staked before the freeze",
+  "issueId": 24,
+  "issueUrl": "https://github.com/code-423n4/2023-05-reserve-findings/issues/24"
+}
