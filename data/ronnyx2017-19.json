@@ -1,0 +1,8 @@
+{
+  "contest": 248,
+  "handle": "ronnyx2017",
+  "risk": "2",
+  "title": "Shouldn't sell reward rtokens when basket is undercollateralized",
+  "issueId": 19,
+  "issueUrl": "https://github.com/code-423n4/2023-05-reserve-findings/issues/19"
+}
