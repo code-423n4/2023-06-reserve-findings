@@ -1,0 +1,8 @@
+{
+  "contest": 248,
+  "handle": "rvierdiiev",
+  "risk": "2",
+  "title": "RToken.redeem should claim rewards before sending tokens to user",
+  "issueId": 32,
+  "issueUrl": "https://github.com/code-423n4/2023-06-reserve-findings/issues/32"
+}
