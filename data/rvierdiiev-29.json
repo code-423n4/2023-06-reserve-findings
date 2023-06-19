@@ -1,0 +1,8 @@
+{
+  "contest": 248,
+  "handle": "rvierdiiev",
+  "risk": "2",
+  "title": "FurnaceP1.setRatio will work incorrect after call when frozen ",
+  "issueId": 29,
+  "issueUrl": "https://github.com/code-423n4/2023-06-reserve-findings/issues/29"
+}
