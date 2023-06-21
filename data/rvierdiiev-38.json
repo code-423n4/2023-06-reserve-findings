@@ -1,0 +1,8 @@
+{
+  "contest": 248,
+  "handle": "rvierdiiev",
+  "risk": "2",
+  "title": "RecollateralizationLibP1.basketRange calculates deficit incorrectly",
+  "issueId": 38,
+  "issueUrl": "https://github.com/code-423n4/2023-06-reserve-findings/issues/38"
+}
