@@ -1,0 +1,8 @@
+{
+  "contest": 248,
+  "handle": "rvierdiiev",
+  "risk": "2",
+  "title": "StRSR.cancelUnstake doesn't call _payoutRewards before minting new shares",
+  "issueId": 39,
+  "issueUrl": "https://github.com/code-423n4/2023-06-reserve-findings/issues/39"
+}
