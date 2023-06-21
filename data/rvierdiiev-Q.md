@@ -55,3 +55,19 @@ But IFFY token can become DEFAULTED as well soon. That's why i believe that it s
 
 ## Recommended Mitigation Steps
 In case if current is SOUND and `other` is IFFY, then sell IFFY.
+
+## #3. StRSR.pushDraft will make new draft be withdrawable later, then it should be in case if current unstakingDelay is smaller then previous one.
+
+## Impact
+User should be able to withdraw his draft after `unstakingDelay` period, but he should wait more.
+
+## Proof of Concept
+When user creates new draft, then `availableAt` time [is calculated for him](https://github.com/reserve-protocol/protocol/blob/c4ec2473bbcb4831d62af55d275368e73e16b984/contracts/p1/StRSR.sol#L623). This is a time when he should be able to withdraw his draft.
+
+However, because [of this check](https://github.com/reserve-protocol/protocol/blob/c4ec2473bbcb4831d62af55d275368e73e16b984/contracts/p1/StRSR.sol#L624-L626) it's possible that user will wait more time to withdraw that draft.
+
+This can happen when `unstakingDelay` governance param was changed to smaller one.
+
+While, i understand that should be done, because of algorithm that is used to work with drafts, this submission is about unfair waiting time.
+## Recommended Mitigation Steps
+Think, that it can't be changed, as it will break work with drafts.
