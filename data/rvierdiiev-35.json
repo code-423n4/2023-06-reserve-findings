@@ -1,0 +1,8 @@
+{
+  "contest": 248,
+  "handle": "rvierdiiev",
+  "risk": "2",
+  "title": "AssetRegistry.swapRegistered can be called with low gas to make basket be disabled",
+  "issueId": 35,
+  "issueUrl": "https://github.com/code-423n4/2023-06-reserve-findings/issues/35"
+}
