@@ -1,0 +1,8 @@
+{
+  "contest": 248,
+  "handle": "rvierdiiev",
+  "risk": "2",
+  "title": "Malicious actor can call rebalance with TradeKind for dutch auction when gas prices are big to make losses for system",
+  "issueId": 45,
+  "issueUrl": "https://github.com/code-423n4/2023-06-reserve-findings/issues/45"
+}
