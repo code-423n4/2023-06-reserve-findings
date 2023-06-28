@@ -67,3 +67,46 @@ https://github.com/reserve-protocol/protocol/blob/c4ec2473bbcb4831d62af55d275368
         }
     }
 ```
+## Code simplification
+The first three lines of code in `redemptionAvailable()` may be combined into one code line like it has been done so in `issuanceAvailable()` and then merged into the if block considering there is no gas saving benefit in caching `totalSupply()` and the returned value of `redemptionThrottle.hourlyLimit(supply)` that will only be used once in the function logic:
+
+https://github.com/reserve-protocol/protocol/blob/c4ec2473bbcb4831d62af55d275368e73e16b984/contracts/p1/RToken.sol#L420-L431
+
+```solidity
+    /// @return {qRTok} The maximum issuance that can be performed in the current block
+    function issuanceAvailable() external view returns (uint256) {
+        return issuanceThrottle.currentlyAvailable(issuanceThrottle.hourlyLimit(totalSupply()));
+    }
+
+    /// @return available {qRTok} The maximum redemption that can be performed in the current block
+    function redemptionAvailable() external view returns (uint256 available) {
+        uint256 supply = totalSupply();
+        uint256 hourlyLimit = redemptionThrottle.hourlyLimit(supply);
+        available = redemptionThrottle.currentlyAvailable(hourlyLimit);
+        if (supply < available) available = supply;
+    }
+```
+## Identical code block
+Identical require code block in the following two functions may be merged into a modifier or simply have both function custom merged into one:
+ 
+https://github.com/reserve-protocol/protocol/blob/c4ec2473bbcb4831d62af55d275368e73e16b984/contracts/p1/RToken.sol#L443-L459
+
+```solidity
+    /// @custom:governance
+    function setIssuanceThrottleParams(ThrottleLib.Params calldata params) public governance {
+        require(params.amtRate >= MIN_THROTTLE_RATE_AMT, "issuance amtRate too small");
+        require(params.amtRate <= MAX_THROTTLE_RATE_AMT, "issuance amtRate too big");
+        require(params.pctRate <= MAX_THROTTLE_PCT_AMT, "issuance pctRate too big");
+        emit IssuanceThrottleSet(issuanceThrottle.params, params);
+        issuanceThrottle.params = params;
+    }
+
+    /// @custom:governance
+    function setRedemptionThrottleParams(ThrottleLib.Params calldata params) public governance {
+        require(params.amtRate >= MIN_THROTTLE_RATE_AMT, "redemption amtRate too small");
+        require(params.amtRate <= MAX_THROTTLE_RATE_AMT, "redemption amtRate too big");
+        require(params.pctRate <= MAX_THROTTLE_PCT_AMT, "redemption pctRate too big");
+        emit RedemptionThrottleSet(redemptionThrottle.params, params);
+        redemptionThrottle.params = params;
+    }
+```
