@@ -1,0 +1,8 @@
+{
+  "contest": 248,
+  "handle": "RaymondFam",
+  "risk": "2",
+  "title": "Mising caller protection when issuing Rtoken",
+  "issueId": 51,
+  "issueUrl": "https://github.com/code-423n4/2023-06-reserve-findings/issues/51"
+}
