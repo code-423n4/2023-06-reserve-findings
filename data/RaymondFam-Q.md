@@ -58,42 +58,12 @@ https://github.com/reserve-protocol/protocol/blob/c4ec2473bbcb4831d62af55d275368
 -    //   lastPayoutBal' = rToken.balanceOf'(this) (balance now == at end of pay leriod)
 +    //   lastPayoutBal' = rToken.balanceOf'(this) (balance now == at end of pay period)
 ```
-## Lower bound melt ratio
-Consider impleting a lower bound require check on line 87 when calling `Furnace.setRatio()`. This is because a zero or near zero `ratio` is going to render the Rtoken sent to this contract increasingly stuck as `lastPayoutBal` on line 78, defeating the intended purpose of raising the exchange rate of RToken to Collateral.
+https://github.com/reserve-protocol/protocol/blob/c4ec2473bbcb4831d62af55d275368e73e16b984/contracts/p1/StRSRVotes.sol#L30
 
-https://github.com/reserve-protocol/protocol/blob/c4ec2473bbcb4831d62af55d275368e73e16b984/contracts/p1/Furnace.sol#L66-L91
-
-```solidity
-    function melt() external notFrozen {
-        if (uint48(block.timestamp) < uint64(lastPayout) + PERIOD) return;
-
-        // # of whole periods that have passed since lastPayout
-        uint48 numPeriods = uint48((block.timestamp) - lastPayout) / PERIOD;
-
-        // Paying out the ratio r, N times, equals paying out the ratio (1 - (1-r)^N) 1 time.
-        uint192 payoutRatio = FIX_ONE.minus(FIX_ONE.minus(ratio).powu(numPeriods));
-
-        uint256 amount = payoutRatio.mulu_toUint(lastPayoutBal);
-
-        lastPayout += numPeriods * PERIOD;
-78:        lastPayoutBal = rToken.balanceOf(address(this)) - amount;
-        if (amount > 0) rToken.melt(amount);
-    }
-
-    /// Ratio setting
-    /// @custom:governance
-    function setRatio(uint192 ratio_) public governance {
-        // solhint-disable-next-line no-empty-blocks
-        if (lastPayout > 0) try this.melt() {} catch {}
-87:        require(ratio_ <= MAX_RATIO, "invalid ratio");
-        // The ratio can safely be set to 0 to turn off payouts, though it is not recommended
-        emit RatioSet(ratio, ratio_);
-        ratio = ratio_;
-    }
+```diff
+-    // _delegates[account] is the address of the delegate that `accountt` has specified
++    // _delegates[account] is the address of the delegate that `account` has specified
 ```
-## Maximum ERC20 quantities the caller should send
-Similar protection like it has been implemented in `Rtoken.redeemCustom` should be introduced in [`issue()`](https://github.com/reserve-protocol/protocol/blob/c4ec2473bbcb4831d62af55d275368e73e16b984/contracts/p1/RToken.sol#L92) and [`issueTo()`](https://github.com/reserve-protocol/protocol/blob/c4ec2473bbcb4831d62af55d275368e73e16b984/contracts/p1/RToken.sol#L101). This could prevent caller from sending in significantly higher quantities of ERC20 than intended that could be preceded by a huge `ratio` increase in Furnace.sol, prolonged accumulation of `lastPayoutBal` due to a system freeze, etc.
-
 ## Inadequate Dutch Auction measure to circumvent chain reorganization
 As denoted in the [Moralis academy article](https://academy.moralis.io/blog/what-is-chain-reorganization):
 
@@ -153,4 +123,27 @@ https://github.com/reserve-protocol/protocol/blob/c4ec2473bbcb4831d62af55d275368
                 (newAuctionLength >= MIN_AUCTION_LENGTH && newAuctionLength <= MAX_AUCTION_LENGTH),
             "invalid dutchAuctionLength"
         );
+```
+## Lower bound on issue and redemption amount
+Consider implementing a lower amount limit when issuing or redeeming RToken to avoid dealing with dusts. 
+
+Additionally, under very rare circumstances, haircuts leading to lower exchange rate of RToken to Collateral could technically have users minting zero amount of RToken due to precision issue while having had to still send in a series of dust collaterals because of `CEIL` rounding on [`basketHandler.quote`](https://github.com/reserve-protocol/protocol/blob/c4ec2473bbcb4831d62af55d275368e73e16b984/contracts/p1/RToken.sol#L136-L139). The same shall also apply to redemption with dust RToken burned and zero collateral received due to `FLOOR` rounding. 
+
+## Precision issue on BasketHandler.quote
+Unlike `quoteCustomRedemption()` that uses `safeMulDivFloor()` when calculating quantities, `quote()` uses `safeMul()` after the division entailed in `_quantity()`.
+
+Consider having the affected code refactored as follows:
+
+https://github.com/reserve-protocol/protocol/blob/c4ec2473bbcb4831d62af55d275368e73e16b984/contracts/p1/BasketHandler.sol#L367-L373
+
+```diff
+            // {qTok} = {tok/BU} * {BU} * {tok} * {qTok/tok}
+-            quantities[i] = _quantity(basket.erc20s[i], coll)
+-                .safeMul(amount, rounding)
++            quantities[i] = amount
++                .safeMul(_quantity(basket.erc20s[i], coll), rounding)
+                .shiftl_toUint(
+                    int8(IERC20Metadata(address(basket.erc20s[i])).decimals()),
+                    rounding
+                );
 ```
