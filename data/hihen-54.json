@@ -1,0 +1,8 @@
+{
+  "contest": 248,
+  "handle": "hihen",
+  "risk": "2",
+  "title": "Potential malicious initialization of GnosisTrade and DutchTrade implementation contract",
+  "issueId": 54,
+  "issueUrl": "https://github.com/code-423n4/2023-06-reserve-findings/issues/54"
+}
